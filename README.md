@@ -1,4 +1,5 @@
-# Simele FrontEnd
+# Simple FrontEnd
+JavaScriptだけで動的なページを作成するサンプルプロジェクトです
 
 ## simple_todo
 簡単なToDoアプリ
