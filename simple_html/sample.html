@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CSSでデザインを変えてみよう（サンプル）</title>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <h1>HTMLとCSSの基本：classで見た目を変えよう</h1>
+            <p>
+                <code>&lt;div&gt;</code> 要素に様々な
+                <code>class</code>
+                を追加して、デザインがどう変化するか確認してみましょう。
+            </p>
+
+            <!-- セクション1: 基本 -->
+            <h2>1. 基本のボックス</h2>
+            <span class="code-label">class="box"</span>
+            <div class="box">
+                これが基本のボックスです。薄いグレーの背景と余白が設定されています。
+            </div>
+
+            <!-- セクション2: 色 -->
+            <h2>2. 色を変えてみる</h2>
+            <span class="code-label">class="box bg-blue"</span>
+            <div class="box bg-blue">
+                青色の背景になりました。文字色も白に変更されています。
+            </div>
+
+            <span class="code-label">class="box bg-red"</span>
+            <div class="box bg-red">赤色の背景です。</div>
+
+            <!-- セクション3: 枠線 -->
+            <h2>3. 枠線をつけてみる</h2>
+            <span class="code-label">class="box border-solid"</span>
+            <div class="box border-solid">太い実線の枠がつきました。</div>
+
+            <span class="code-label">class="box border-dashed"</span>
+            <div class="box border-dashed">破線の枠がつきました。</div>
+
+            <!-- セクション4: 角の丸み -->
+            <h2>4. 角を丸くしてみる</h2>
+            <span class="code-label">class="box bg-green rounded-small"</span>
+            <div class="box bg-green rounded-small">
+                角が少し丸くなりました。
+            </div>
+
+            <span class="code-label">class="box bg-green rounded-large"</span>
+            <div class="box bg-green rounded-large">
+                角が大きく丸くなりました。
+            </div>
+
+            <span class="code-label">class="box bg-green rounded-circle"</span>
+            <div class="box bg-green rounded-circle">完全な円形</div>
+
+            <!-- セクション5: 組み合わせ -->
+            <h2>5. 複数のclassを組み合わせてみる</h2>
+            <p>classは半角スペースで区切ることで、複数同時に適用できます。</p>
+
+            <span class="code-label"
+                >class="box bg-blue border-solid rounded-large shadow
+                text-large"</span
+            >
+            <div
+                class="box bg-blue border-solid rounded-large shadow text-large"
+            >
+                全部のせボックス！
+            </div>
+        </div>
+    </body>
+</html>
