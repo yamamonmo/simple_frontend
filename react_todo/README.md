@@ -25,6 +25,60 @@ npm run build
 
 ---
 
+## ビルド後に動かすには
+
+`npm run build` で `dist/` フォルダにファイルを出力しても、`dist/index.html` をブラウザで直接開くだけでは動きません。
+
+### なぜ直接開けないのか
+
+ブラウザでローカルファイルを開くと、URLが `http://...` ではなく `file:///...` になります。
+
+```
+# HTTPサーバー経由（動く）
+http://localhost:4173/index.html
+
+# ファイルを直接開いた場合（動かない）
+file:///Users/yourname/react_todo/dist/index.html
+```
+
+`npm run build` が出力するHTMLは、JavaScriptを `<script type="module">` という形式で読み込みます。
+
+```html
+<script type="module" src="/assets/index-abc123.js"></script>
+```
+
+ブラウザはセキュリティ上の理由から、`file://` でアクセスしたページでは `type="module"` のスクリプトを実行しません（CORS制約）。また `/assets/...` のようなルート相対パスも `file://` では解決できません。
+
+→ **ファイルをHTTP経由で配信するサーバーが必要です。**
+
+### 確認方法
+
+**方法1（一番簡単）: `npm run preview`**
+
+Viteに組み込まれているプレビューサーバーを使います。`npm run build` の後に実行します。
+
+```bash
+npm run build    # dist/ にビルド
+npm run preview  # dist/ をHTTPサーバーで配信
+```
+
+ブラウザで `http://localhost:4173` を開くと動作確認できます。`npm run dev` との違いは次のとおりです：
+
+| コマンド | 何を動かすか | 用途 |
+|---|---|---|
+| `npm run dev` | ソースコード（`src/`）をその場で変換 | 開発中の編集・確認 |
+| `npm run preview` | ビルド済みファイル（`dist/`）をそのまま配信 | 本番ビルドの最終確認 |
+
+**方法2: `npx serve`**
+
+Node.jsが入っていれば `serve` パッケージで簡易サーバーを立てることもできます：
+
+```bash
+npx serve dist
+```
+
+---
+
 ## ファイル構成
 
 ```
@@ -432,6 +486,53 @@ return (
 
 ---
 
+### スプレッド構文（`...`）
+
+`...` はJavaScriptの**スプレッド構文（spread syntax）**です。配列やオブジェクトの要素を「展開する」記法で、このプロジェクトでは App.tsx の2か所で使われています。
+
+**配列のスプレッド — `[...todos, newTodo]`**
+
+```ts
+// todos が [{id:1, text:"買い物"}, {id:2, text:"掃除"}] のとき
+setTodos([...todos, newTodo]);
+// ↓ 展開すると
+// [{id:1, text:"買い物"}, {id:2, text:"掃除"}, newTodo]
+```
+
+`push()` を使わずスプレッドを使う理由はReactのルールにあります：
+
+```ts
+// ✗ NG: 元の配列を直接変更してしまう
+todos.push(newTodo);
+setTodos(todos);
+
+// ✓ OK: 元の配列をコピーした新しい配列を渡す
+setTodos([...todos, newTodo]);
+```
+
+Reactは「新しい配列かどうか」で再描画が必要かを判断します。元の配列を直接変更（ミューテート）すると、Reactが変化を検知できず画面が更新されません。
+
+**オブジェクトのスプレッド — `{ ...todo, completed: !todo.completed }`**
+
+```ts
+todos.map((todo) =>
+  todo.id === id ? { ...todo, completed: !todo.completed } : todo
+)
+```
+
+`{ ...todo, completed: !todo.completed }` は「`todo` の全プロパティをコピーした上で `completed` だけ上書きした新しいオブジェクト」を作ります：
+
+```ts
+// todo が { id:1, text:"買い物", completed: false } のとき
+{ ...todo, completed: true }
+// → { id:1, text:"買い物", completed: true }
+//            ↑ コピー               ↑ 上書き
+```
+
+配列と同じ理由で、オブジェクトも直接変更せず新しいオブジェクトを作って渡します。
+
+---
+
 ## 学べる主な概念
 
 ### React
@@ -452,6 +553,13 @@ return (
 | propsに型をつける | `TodoItem.tsx`, `TodoInput.tsx` |
 | イベントの型（`React.KeyboardEvent` など） | `TodoInput.tsx` |
 | `useState` にジェネリクスで型を渡す | `App.tsx` |
+
+### JavaScript
+
+| 概念 | どのファイルで学べるか |
+|---|---|
+| スプレッド構文（`...`）で配列をコピー・追加 | `App.tsx` |
+| スプレッド構文（`...`）でオブジェクトをコピー・上書き | `App.tsx` |
 
 ---
 
